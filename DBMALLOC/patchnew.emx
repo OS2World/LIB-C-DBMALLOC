@@ -1,0 +1,174 @@
+*** Makefile	Tue Jul 27 16:59:58 1993
+--- ..\dbmalloc\Makefile	Wed Apr 26 18:31:34 1995
+***************
+*** 99,112 ****
+  SHARCMD=makekit -p -m -nmallocshar.
+  #SHELL=/bin/sh
+  
+! LIB=libdbmalloc.a
+  LINTLIB=llib-ldbmal.ln
+  
+  #
+  # You shouldn't have to modify anything below this line
+  #
+  LIBSRCS=	malloc.c	\
+- 		datamc.c	\
+  		datams.c	\
+  		dgmalloc.c	\
+  		fill.c		\
+--- 99,111 ----
+  SHARCMD=makekit -p -m -nmallocshar.
+  #SHELL=/bin/sh
+  
+! LIB=dbmalloc.a
+  LINTLIB=llib-ldbmal.ln
+  
+  #
+  # You shouldn't have to modify anything below this line
+  #
+  LIBSRCS=	malloc.c	\
+  		datams.c	\
+  		dgmalloc.c	\
+  		fill.c		\
+***************
+*** 131,137 ****
+  		leak.c	
+  
+  LIBOBJS=	malloc.o	\
+- 		datamc.o	\
+  		datams.o	\
+  		dgmalloc.o	\
+  		fill.o		\
+--- 130,135 ----
+***************
+*** 323,329 ****
+  # special rules for building datams.o and datamc.o
+  #
+  datams.o: datams.c malloc.h mallocin.h sysdefs.h
+- datamc.o: datamc.c malloc.h mallocin.h sysdefs.h
+  
+  #
+  # include file dependencies
+--- 321,326 ----
+*** memory.c	Mon Jan 04 09:53:44 1993
+--- ..\dbmalloc\memory.c	Wed Apr 26 18:35:22 1995
+***************
+*** 78,84 ****
+  	malloc_check_data("memccpy", file, line, ptr1, i);
+  	malloc_check_data("memccpy", file, line, ptr2, i);
+  
+! 	DataMC(ptr1,ptr2,i);
+  	
+  	return( rtn );
+  }
+--- 78,84 ----
+  	malloc_check_data("memccpy", file, line, ptr1, i);
+  	malloc_check_data("memccpy", file, line, ptr2, i);
+  
+! 	memmove(ptr1,ptr2,i);
+  	
+  	return( rtn );
+  }
+***************
+*** 129,143 ****
+   * memmove - copy one memory area to another
+   */
+  MEMDATA  * 
+- memmove(ptr1, ptr2, len)
+- 	MEMDATA 		* ptr1;
+- 	CONST MEMDATA 		* ptr2;
+- 	register MEMSIZE 	  len;
+- {
+- 	return( DBmemmove( (char *) NULL, 0,ptr1, ptr2, len) );
+- }
+- 
+- MEMDATA  * 
+  DBmemmove(file,line,ptr1, ptr2, len)
+  	CONST char		* file;
+  	int			  line;
+--- 129,134 ----
+***************
+*** 183,189 ****
+  	malloc_check_data(func, file, line, ptr1, len);
+  	malloc_check_data(func, file, line, ptr2, len);
+  
+! 	DataMC(ptr1,ptr2,len);
+  	
+  	return(rtn);
+  }
+--- 174,180 ----
+  	malloc_check_data(func, file, line, ptr1, len);
+  	malloc_check_data(func, file, line, ptr2, len);
+  
+! 	memmove(ptr1,ptr2,len);
+  	
+  	return(rtn);
+  }
+*** prototypes.h	Mon Jan 04 09:53:44 1993
+--- ..\dbmalloc\prototypes.h	Wed Apr 26 18:36:56 1995
+***************
+*** 19,26 ****
+  CONST char *MallocFuncName __stdcargs((CONST struct mlist *mptr));
+  CONST char *FreeFuncName __stdcargs((CONST struct mlist *mptr));
+  void InitMlist __stdcargs((struct mlist *mptr, int type));
+- /* datamc.c */
+- void DataMC __stdcargs((MEMDATA *ptr1, CONST MEMDATA *ptr2, MEMSIZE len));
+  /* datams.c */
+  void DataMS __stdcargs((MEMDATA *ptr1, int ch, register MEMSIZE len));
+  /* dgmalloc.c */
+--- 19,24 ----
+*** realloc.c	Mon Jan 04 09:53:46 1993
+--- ..\dbmalloc\realloc.c	Wed Apr 26 18:35:48 1995
+***************
+*** 306,312 ****
+  		 * copy data from the current space to the new space.  Note
+  	 	 * that the data areas for this copy will likely overlap.
+  		 */
+! 		DataMC(ptr->data,optr->data,ptr->r_size);
+  
+  		/*
+  		 * note that we don't fill in the areas here.  It will be
+--- 306,312 ----
+  		 * copy data from the current space to the new space.  Note
+  	 	 * that the data areas for this copy will likely overlap.
+  		 */
+! 		memmove(ptr->data,optr->data,ptr->r_size);
+  
+  		/*
+  		 * note that we don't fill in the areas here.  It will be
+*** string.c	Mon Jan 04 09:53:46 1993
+--- ..\dbmalloc\string.c	Wed Apr 26 18:36:16 1995
+***************
+*** 478,484 ****
+  
+  	rtn = str1;
+  
+! 	DataMC(str1, str2, len);
+  
+  	return(rtn);
+  }
+--- 478,484 ----
+  
+  	rtn = str1;
+  
+! 	memmove(str1, str2, len);
+  
+  	return(rtn);
+  }
+***************
+*** 518,524 ****
+  	/*
+  	 * copy the real data
+  	 */
+! 	DataMC(str1,str2,i);
+  
+  	/*
+  	 * if there is data left over
+--- 518,524 ----
+  	/*
+  	 * copy the real data
+  	 */
+! 	memmove(str1,str2,i);
+  
+  	/*
+  	 * if there is data left over

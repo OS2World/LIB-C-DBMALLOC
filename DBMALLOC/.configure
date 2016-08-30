@@ -1,0 +1,71 @@
+
+#if       (__GNUC__ == 2) && __STDC__
+
+#define VOIDTYPE void
+#define CONST const
+#define EXITTYPE void
+#define DATATYPE void
+#define SIZETYPE size_t
+#define FREETYPE void
+#define MEMDATA void
+#define MEMSIZE int
+#define MEMCMPTYPE char
+#define STRSIZE size_t
+#define STRCMPTYPE char
+
+#else  /* (__GNUC__ == 2) && __STDC__ */
+
+
+#if       (__GNUC__ == 2)
+
+#define VOIDTYPE void
+#define CONST 
+#define EXITTYPE void
+#define DATATYPE void
+#define SIZETYPE size_t
+#define FREETYPE void
+#define MEMDATA char
+#define MEMSIZE int
+#define MEMCMPTYPE char
+#define STRSIZE size_t
+#define STRCMPTYPE char
+
+#else  /* (__GNUC__ == 2) */
+
+
+#if       __cplusplus
+
+#define VOIDTYPE void
+#define CONST const
+#define EXITTYPE void
+#define DATATYPE void
+#define SIZETYPE int
+#define FREETYPE void
+#define MEMDATA void
+#define MEMSIZE int
+#define MEMCMPTYPE char
+#define STRSIZE size_t
+#define STRCMPTYPE char
+
+#else  /* __cplusplus */
+
+#define VOIDTYPE void
+#define CONST 
+#define EXITTYPE int
+#define DATATYPE char
+#define SIZETYPE size_t
+#define FREETYPE int
+#define MEMDATA char
+#define MEMSIZE int
+#define MEMCMPTYPE char
+#define STRSIZE size_t
+#define STRCMPTYPE char
+
+#endif /* __cplusplus */
+
+
+#endif /* (__GNUC__ == 2) */
+
+
+#endif /* (__GNUC__ == 2) && __STDC__ */
+
